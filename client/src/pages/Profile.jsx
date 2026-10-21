@@ -1,0 +1,12 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { UserRound, Mail, MapPin, BookOpen, Save } from "lucide-react";
+
+export default function Profile(){
+  let saved=null;try{saved=JSON.parse(localStorage.getItem("scholarconnect_user")||"null");}catch{}
+  const [form,setForm]=useState({name:saved?.name||"",email:saved?.email||"",state:saved?.state||"Haryana",education:saved?.education||"Undergraduate"});
+  const [message,setMessage]=useState("");
+  const update=e=>setForm({...form,[e.target.name]:e.target.value});
+  function submit(e){e.preventDefault();localStorage.setItem("scholarconnect_user",JSON.stringify(form));setMessage("Profile saved in this browser.");}
+  return <div className="page container"><div className="page-heading"><span className="eyebrow dark-eyebrow">YOUR DETAILS</span><h1>Student profile</h1><p>Keep your basic details organised for your own reference.</p></div><div className="profile-layout"><div className="profile-card"><div className="profile-avatar"><UserRound size={38}/></div><h2>{form.name||"Student name"}</h2><p>{form.education}</p><span className="profile-location"><MapPin size={15}/>{form.state}</span></div><form className="panel profile-form" onSubmit={submit}><h2>Personal information</h2><label>Full name<div className="input-with-icon"><UserRound size={17}/><input name="name" value={form.name} onChange={update} required/></div></label><label>Email address<div className="input-with-icon"><Mail size={17}/><input type="email" name="email" value={form.email} onChange={update} required/></div></label><label>State / region<select name="state" value={form.state} onChange={update}><option>Haryana</option><option>Delhi</option><option>Uttar Pradesh</option><option>Rajasthan</option><option>Other</option></select></label><label>Education level<select name="education" value={form.education} onChange={update}><option>School</option><option>Undergraduate</option><option>Postgraduate</option><option>Technical / Diploma</option></select></label><button className="btn btn-primary"><Save size={16}/> Save profile</button>{message&&<p className="form-message">{message}</p>}<p className="small-print">This profile form stores its data in this browser only. It does not update the server account.</p></form></div><p className="back-link"><Link to="/dashboard">← Back to dashboard</Link></p></div>;
+}
